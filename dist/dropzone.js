@@ -105,9 +105,9 @@
 
     /*
     This is a list of all available events you can register on a dropzone object.
-    
+
     You can register an event handler like this:
-    
+
         dropzone.on("dragEnter", function() { });
      */
 
@@ -404,61 +404,63 @@
     };
 
     function Dropzone(element, options) {
-      var elementOptions, fallback, _ref;
-      this.element = element;
-      this.version = Dropzone.version;
-      this.defaultOptions.previewTemplate = this.defaultOptions.previewTemplate.replace(/\n*/g, "");
-      this.clickableElements = [];
-      this.listeners = [];
-      this.files = [];
-      if (typeof this.element === "string") {
-        this.element = document.querySelector(this.element);
-      }
-      if (!(this.element && (this.element.nodeType != null))) {
-        throw new Error("Invalid dropzone element.");
-      }
-      if (this.element.dropzone) {
-        throw new Error("Dropzone already attached.");
-      }
-      Dropzone.instances.push(this);
-      this.element.dropzone = this;
-      elementOptions = (_ref = Dropzone.optionsForElement(this.element)) != null ? _ref : {};
-      this.options = extend({}, this.defaultOptions, elementOptions, options != null ? options : {});
-      if (this.options.forceFallback || !Dropzone.isBrowserSupported()) {
-        return this.options.fallback.call(this);
-      }
-      if (this.options.url == null) {
-        this.options.url = this.element.getAttribute("action");
-      }
-      if (!this.options.url) {
-        throw new Error("No URL provided.");
-      }
-      if (this.options.acceptedFiles && this.options.acceptedMimeTypes) {
-        throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
-      }
-      if (this.options.acceptedMimeTypes) {
-        this.options.acceptedFiles = this.options.acceptedMimeTypes;
-        delete this.options.acceptedMimeTypes;
-      }
-      this.options.method = this.options.method.toUpperCase();
-      if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
-        fallback.parentNode.removeChild(fallback);
-      }
-      if (this.options.previewsContainer !== false) {
-        if (this.options.previewsContainer) {
-          this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
-        } else {
-          this.previewsContainer = this.element;
+      if(typeof document !== 'undefined'){
+        var elementOptions, fallback, _ref;
+        this.element = element;
+        this.version = Dropzone.version;
+        this.defaultOptions.previewTemplate = this.defaultOptions.previewTemplate.replace(/\n*/g, "");
+        this.clickableElements = [];
+        this.listeners = [];
+        this.files = [];
+        if (typeof this.element === "string") {
+          this.element = document.querySelector(this.element);
         }
-      }
-      if (this.options.clickable) {
-        if (this.options.clickable === true) {
-          this.clickableElements = [this.element];
-        } else {
-          this.clickableElements = Dropzone.getElements(this.options.clickable, "clickable");
+        if (!(this.element && (this.element.nodeType != null))) {
+          throw new Error("Invalid dropzone element.");
         }
+        if (this.element.dropzone) {
+          throw new Error("Dropzone already attached.");
+        }
+        Dropzone.instances.push(this);
+        this.element.dropzone = this;
+        elementOptions = (_ref = Dropzone.optionsForElement(this.element)) != null ? _ref : {};
+        this.options = extend({}, this.defaultOptions, elementOptions, options != null ? options : {});
+        if (this.options.forceFallback || !Dropzone.isBrowserSupported()) {
+          return this.options.fallback.call(this);
+        }
+        if (this.options.url == null) {
+          this.options.url = this.element.getAttribute("action");
+        }
+        if (!this.options.url) {
+          throw new Error("No URL provided.");
+        }
+        if (this.options.acceptedFiles && this.options.acceptedMimeTypes) {
+          throw new Error("You can't provide both 'acceptedFiles' and 'acceptedMimeTypes'. 'acceptedMimeTypes' is deprecated.");
+        }
+        if (this.options.acceptedMimeTypes) {
+          this.options.acceptedFiles = this.options.acceptedMimeTypes;
+          delete this.options.acceptedMimeTypes;
+        }
+        this.options.method = this.options.method.toUpperCase();
+        if ((fallback = this.getExistingFallback()) && fallback.parentNode) {
+          fallback.parentNode.removeChild(fallback);
+        }
+        if (this.options.previewsContainer !== false) {
+          if (this.options.previewsContainer) {
+            this.previewsContainer = Dropzone.getElement(this.options.previewsContainer, "previewsContainer");
+          } else {
+            this.previewsContainer = this.element;
+          }
+        }
+        if (this.options.clickable) {
+          if (this.options.clickable === true) {
+            this.clickableElements = [this.element];
+          } else {
+            this.clickableElements = Dropzone.getElements(this.options.clickable, "clickable");
+          }
+        }
+        this.init();
       }
-      this.init();
     }
 
     Dropzone.prototype.getAcceptedFiles = function() {
@@ -1592,11 +1594,7 @@
     };
   }
 
-  if (typeof module !== "undefined" && module !== null) {
-    module.exports = Dropzone;
-  } else {
-    window.Dropzone = Dropzone;
-  }
+  module.exports = Dropzone;
 
   Dropzone.ADDED = "added";
 
@@ -1616,7 +1614,7 @@
 
 
   /*
-  
+
   Bugfix for iOS 6 and 7
   Source: http://stackoverflow.com/questions/11929099/html5-canvas-drawimage-ratio-bug-ios
   based on the work of https://github.com/stomita/ios-imagefile-megapixel
@@ -1673,56 +1671,59 @@
    * http://javascript.nwbox.com/ContentLoaded/MIT-LICENSE
    */
 
-  contentLoaded = function(win, fn) {
-    var add, doc, done, init, poll, pre, rem, root, top;
-    done = false;
-    top = true;
-    doc = win.document;
-    root = doc.documentElement;
-    add = (doc.addEventListener ? "addEventListener" : "attachEvent");
-    rem = (doc.addEventListener ? "removeEventListener" : "detachEvent");
-    pre = (doc.addEventListener ? "" : "on");
-    init = function(e) {
-      if (e.type === "readystatechange" && doc.readyState !== "complete") {
-        return;
-      }
-      (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
-      if (!done && (done = true)) {
-        return fn.call(win, e.type || e);
-      }
-    };
-    poll = function() {
-      var e;
-      try {
-        root.doScroll("left");
-      } catch (_error) {
-        e = _error;
-        setTimeout(poll, 50);
-        return;
-      }
-      return init("poll");
-    };
-    if (doc.readyState !== "complete") {
-      if (doc.createEventObject && root.doScroll) {
-        try {
-          top = !win.frameElement;
-        } catch (_error) {}
-        if (top) {
-          poll();
+  contentLoaded = function(fn) {
+    if(typeof document !== 'undefined'){
+      var win = window;
+      var add, doc, done, init, poll, pre, rem, root, top;
+      done = false;
+      top = true;
+      doc = win.document;
+      root = doc.documentElement;
+      add = (doc.addEventListener ? "addEventListener" : "attachEvent");
+      rem = (doc.addEventListener ? "removeEventListener" : "detachEvent");
+      pre = (doc.addEventListener ? "" : "on");
+      init = function(e) {
+        if (e.type === "readystatechange" && doc.readyState !== "complete") {
+          return;
         }
+        (e.type === "load" ? win : doc)[rem](pre + e.type, init, false);
+        if (!done && (done = true)) {
+          return fn.call(win, e.type || e);
+        }
+      };
+      poll = function() {
+        var e;
+        try {
+          root.doScroll("left");
+        } catch (_error) {
+          e = _error;
+          setTimeout(poll, 50);
+          return;
+        }
+        return init("poll");
+      };
+      if (doc.readyState !== "complete") {
+        if (doc.createEventObject && root.doScroll) {
+          try {
+            top = !win.frameElement;
+          } catch (_error) {}
+          if (top) {
+            poll();
+          }
+        }
+        doc[add](pre + "DOMContentLoaded", init, false);
+        doc[add](pre + "readystatechange", init, false);
+        return win[add](pre + "load", init, false);
       }
-      doc[add](pre + "DOMContentLoaded", init, false);
-      doc[add](pre + "readystatechange", init, false);
-      return win[add](pre + "load", init, false);
     }
   };
 
   Dropzone._autoDiscoverFunction = function() {
     if (Dropzone.autoDiscover) {
-      return Dropzone.discover();
+      //return Dropzone.discover();
     }
   };
 
-  contentLoaded(window, Dropzone._autoDiscoverFunction);
+  contentLoaded(Dropzone._autoDiscoverFunction);
 
 }).call(this);
